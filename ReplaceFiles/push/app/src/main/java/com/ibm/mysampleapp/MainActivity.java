@@ -68,7 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(String response) {
-                Toast.makeText(getBaseContext(),"Successfully registered for IBM Cloud Push Notifications",Toast.LENGTH_LONG).show();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getBaseContext(),"Successfully registered for IBM Cloud Push Notifications",Toast.LENGTH_LONG).show();
+                    }
+                });
                 // Split response and convert to JSON object to display User ID confirmation from the backend.
                 String[] resp = response.split("Text: ");
                 String userId = "";
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(MFPPushException ex) {
-                Toast.makeText(getBaseContext(),"Failed to register for IBM Cloud Push Notifications",Toast.LENGTH_LONG).show();
+                final String DefaultErrLog = "Error registering for Bluemix Push Notifications: ";
                 String errLog = "Error registering for Bluemix Push Notifications: ";
                 String errMessage = ex.getErrorMessage();
                 int statusCode = ex.getStatusCode();
@@ -102,7 +106,11 @@ public class MainActivity extends AppCompatActivity {
                 } else if (statusCode == 0) {
                     errLog += "Request to Bluemix Push Notifications service instance timed out. Ensure your device is connected to the Internet.";
                 }
-
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getBaseContext(),DefaultErrLog.toString(),Toast.LENGTH_LONG).show();
+                    }
+                });
                 android.util.Log.e("YOUR_TAG_HERE", errLog);
             }
         });
